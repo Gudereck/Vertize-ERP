@@ -1,3 +1,5 @@
+<p align="center"><img src="imagens/logo.png" alt="Logotipo do Vertize" width="120"></p>
+
 # Vertize
 
 Vertize é um sistema de gestão para lojistas de moda, oferecido como serviço (SaaS): cada lojista tem
