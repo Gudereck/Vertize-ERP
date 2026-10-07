@@ -1,0 +1,71 @@
+# Ambiente de produção: banco, backend e servidor web. Lê as variáveis do arquivo .env
+# na raiz (modelo em .env.producao.example). Passo a passo em docs/publicacao.md.
+name: erp
+
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: erp
+      # Dono das tabelas: usado apenas pelo Flyway para rodar as migrações.
+      POSTGRES_USER: erp_owner
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+      # Lido pelo script de init (docker/postgres/init/01-usuario-app.sh) para criar o usuário da aplicação.
+      ERP_APP_PASSWORD: ${ERP_APP_PASSWORD:?defina ERP_APP_PASSWORD no .env}
+      TZ: America/Sao_Paulo
+    # Sem "ports": o banco só é alcançado pelos outros contêineres, nunca pela internet.
+    volumes:
+      - erp_pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U erp_owner -d erp"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DOMINIO: ${DOMINIO:?defina DOMINIO no .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      ERP_APP_PASSWORD: ${ERP_APP_PASSWORD}
+      ERP_JWT_SEGREDO: ${ERP_JWT_SEGREDO:?defina ERP_JWT_SEGREDO no .env}
+      ERP_CADASTRO_PUBLICO: ${ERP_CADASTRO_PUBLICO:-false}
+      # Endereço das telas, como o navegador o vê. Só muda se o site não estiver na porta 443.
+      ERP_ORIGEM_DO_SITE: ${ERP_ORIGEM_DO_SITE:-https://${DOMINIO}}
+      TZ: America/Sao_Paulo
+    # Considera o backend pronto quando a porta 8080 aceita conexões.
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8080"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+      start_period: 20s
+
+  web:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      DOMINIO: ${DOMINIO}
+    ports:
+      - "${PORTA_HTTP:-80}:80"
+      - "${PORTA_HTTPS:-443}:443"
+    volumes:
+      - ./publicacao/Caddyfile:/etc/caddy/Caddyfile:ro
+      # Guarda os certificados HTTPS entre reinícios.
+      - caddy_dados:/data
+      - caddy_config:/config
+
+volumes:
+  erp_pgdata:
+  caddy_dados:
+  caddy_config:
