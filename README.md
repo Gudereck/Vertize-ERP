@@ -22,7 +22,7 @@ várias cores e tamanhos, e é cada combinação que se vende e se conta no esto
 | Conta e acesso | Criação da empresa com a primeira loja e o usuário dono; login; sessão retomada ao recarregar a página |
 | Lojas e usuários | Várias lojas por empresa; quatro papéis (dono, gerente, vendedor, caixa); cada pessoa vê só as lojas em que trabalha |
 | Catálogo | Categorias, marcas, coleções, cores e grades de tamanho; produtos com uma variação por cor e tamanho, SKU e código de barras gerados, preço próprio por variação e campos fiscais |
-| Estoque | Saldo de cada variação por loja; entrada, saída e ajuste de contagem; histórico de movimentações que nunca é apagado |
+| Estoque | Saldo de cada variação por loja; entrada, saída e ajuste de contagem; histórico de movimentações que nunca é apagado; relatório com quantidade e valor, com impressão e exportação para planilha |
 | Navegação | Tela inicial em mapa de funções, na ordem em que a loja trabalha, com busca e atalhos |
 
 Em construção: a venda no caixa (PDV), com abertura e fechamento de caixa. Planejados: venda
@@ -152,10 +152,10 @@ Trechos: [docker-compose.producao.yml](trechos/docker-compose.producao.yml) e
 
 ## Testes
 
-- **Backend:** 20 testes de integração, que sobem um PostgreSQL real em contêiner e
+- **Backend:** 19 testes de integração, que sobem um PostgreSQL real em contêiner e
   cobrem login, renovação de sessão, isolamento entre empresas, permissões por papel,
-  limite de tentativas de login, CORS, catálogo e estoque.
-- **Frontend:** 67 testes do núcleo: cliente da API, sessão, permissões, formatos e mapa de
+  limite de tentativas de login, CORS, catálogo, estoque e relatório de estoque.
+- **Frontend:** 72 testes do núcleo: cliente da API, sessão, permissões, formatos, exportação e mapa de
   funções.
 
 ## Licença
