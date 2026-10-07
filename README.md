@@ -1,6 +1,6 @@
-# ERP para lojas de roupas e acessórios
+# Vertize
 
-Sistema de gestão para lojistas de moda, oferecido como serviço (SaaS): cada lojista tem
+Vertize é um sistema de gestão para lojistas de moda, oferecido como serviço (SaaS): cada lojista tem
 sua empresa, com uma ou mais lojas, e usa o sistema pelo navegador. Está publicado em
 produção, com HTTPS, em um servidor próprio.
 
