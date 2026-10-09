@@ -2,9 +2,12 @@
 
 # Vertize
 
-Vertize é um sistema de gestão para lojistas de moda, oferecido como serviço (SaaS): cada lojista tem
-sua empresa, com uma ou mais lojas, e usa o sistema pelo navegador. Está publicado em
-produção, com HTTPS, em um servidor próprio.
+Vertize é um sistema de gestão para lojas de moda, usado pelo navegador. Nasceu para atender
+uma loja real e está publicado em produção, com HTTPS, em um servidor próprio.
+
+O sistema é multiusuário e multiloja: uma empresa pode ter várias lojas e vários usuários,
+cada um com o seu papel (dono, gerente, vendedor ou caixa). A estrutura também comporta
+várias empresas no mesmo sistema, com os dados de cada uma isolados pelo banco.
 
 Este repositório é a apresentação do projeto. O código completo fica em um repositório
 privado; aqui estão as telas, as decisões de arquitetura e alguns trechos escolhidos.
@@ -92,9 +95,9 @@ flowchart LR
 
 ## Decisões de projeto
 
-### Isolamento entre lojistas feito pelo banco
+### Isolamento entre empresas feito pelo banco
 
-O maior risco de um SaaS é um cliente enxergar dados de outro. Aqui a barreira final não é
+Num sistema com várias empresas, o maior risco é uma enxergar os dados de outra. Aqui a barreira final não é
 o código da aplicação, e sim o PostgreSQL:
 
 - Toda tabela tem `empresa_id` e uma política de Row Level Security.

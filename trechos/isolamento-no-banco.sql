@@ -1,4 +1,4 @@
--- Trecho da migração inicial (V1__base.sql): como o banco isola os dados de cada lojista.
+-- Trecho da migração inicial (V1__base.sql): como o banco isola os dados de cada empresa.
 -- O arquivo completo cria também as tabelas de usuário, vínculo usuário-loja e sessão,
 -- todas com a mesma política.
 
